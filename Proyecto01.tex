@@ -1,0 +1,162 @@
+\documentclass[spanish,11pt,letterpaper]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[margin=1in]{geometry}
+% \usepackage{graphicx}
+% \usepackage{hyperref}
+% \usepackage{listings}
+% \usepackage{xcolor}
+
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\decimalpoint
+
+\title{P}
+\author{P}
+\affil{P}
+\date{P}
+
+\begin{document}
+
+\maketitle
+
+\section{Descripción de la técnica elegida}
+
+\subsection{Árboles de decisión para clasificación}
+
+Los árboles de decisión para clasificación son una herramienta de aprendizaje
+supervisado para clasificación de ejemplares en categorías en base a los
+atributos de los ejemplares, esto es, decide a qué categoría pertenece el
+ejemplar. El árbol es una función que recibe un vector de atributos (o características) que
+representan un ejemplar de un fenómeno o situación, realiza una serie de
+preguntas sobre los valores de las características y con esta información
+decide a qué categoría pertenece el ejemplar.
+
+\subsubsection{Espacio de hipótesis}
+
+Pensemos primero en árboles de decisión binarios (o booleanos), esto es, deciden si un ejemplar
+pertenece a una de dos categorías (Sí o No). Supongamos que las características
+de los ejemplares de entrada son binarias también.
+
+Un árbol de decisión es una
+función que dado un vector de $n$ características $a_1,\ldots,a_n$,
+asigna un valor en $\{0,1\}$. Hay un total de $2^n$ posibles vectores de entrada,
+por lo que existen un total de $2^{2^n}$ funciones de este tipo, sin embargo puede
+haber árboles distintos que calculen la misma función, por ejemplo, cambiando el
+orden de las preguntas sobre los atributos del vector de entrada. Así, el
+espacio de hipótesis con árboles de decisión es el conjunto de árboles que calculan
+las funciones binarias sobre vectores de $n$ características, que tiene cardinalidad
+al menos $2^{2^n}$.
+
+En el caso general donde los vectores de entrada tienen $n$ características, cada
+característica $a_i$ toma valores en algún conjunto finito $A_i$, y el árbol
+decide si el ejemplar pertenece a alguna de $k$ categorías distintas, nuestro espacio
+de hipótesis es el conjunto de árboles que calculan funciones
+$A_1\times\ldots\times A_n \rightarrow \{0,\ldots,k-1\}$, que son al menos
+\[ k^r, r = \prod_{r=1}^n|A_r|. \]
+
+\subsubsection{Entropía de una variable aleatoria y Información Mútua}
+
+La \textit{entropía} de una variable aleatoria $X$ es una medida de la cantidad
+promedio de información que nos da $X$ cada vez que toma un valor.
+Podemos preguntarnos por qué tanta información nos da el evento
+$X = x_s$ cuando ocurre, por ejemplo: un evento que ocurre con probabilidad 1 no nos da
+información porque sabemos que va a ocurrir, pero si un evento con baja probabilidad
+ocurre nos da más información sobre el fenómeno que modela $X$ en ese momento y
+la cantidad de información está relacionada con el inverso de la probabilidad
+de ocurrencia.
+
+Considera una variable aleatoria discreta $X$ que toma valores en un conjunto
+finito $\{x_1,\ldots,x_k\}$ con función de masa $p(s) = p_s = P[X = x_s]$. Definimos la
+cantidad de información ganada al observar el evento $X = x_s$ con probabilidad
+$p_s$ como \[ I(x_s) := \log \left(\frac{1}{p_s}\right) = -\log(p_s).\footnote{La
+base del logaritmo es arbitaria, cuando es 2 la unidad de medición son bits.} \]
+
+La anterior definición cumple lo siguiente:
+\begin{enumerate}
+  \item Si $p_s=1$, $I(x_s) = 0$. Un evento que siempre ocurre no da información,
+  \item $I(x_s) \geq 0$. La ocurrencia del evento $X = x_s$ da algo o nada de información,
+  nunca se pierde información,
+  \item Si $p_i < p_j$, $I(x_i) > I(x_j)$. Eventos menos probables dan más información.
+\end{enumerate}
+
+Entonces, la entropía de $X$ se define como
+\[ H_X := \mathbb{E}[I(x_s)] = \sum_{s=1}^k p_sI(x_s) = -\sum_{s=1}^k p_s\log(p_s).
+\footnote{Consideramos $0\log(0)=0$.} \]
+
+La extropía está acotada por $0 \leq H_X \leq \log(k)$. Es 0 cuando un evento
+ocurre con probabilidad 1 y los demás con probabilidad 0 pues no ganamos información,
+siempre ocurre lo mismo. Es $\log(k)$ cuando todos los eventos son equiprobables
+y la incertidumbre es máxima.
+
+Dadas dos variables aleatorias discretas $X,Y$, la \textit{información mútua} es
+una medida de la información que $X$ y $Y$ comparten, esto es, cuánto se reduce
+la incertidumbre de una cuando se observa la otra. Se define como
+%\[I(X;Y) := \sum_{t=1}^l\sum_{s=1}^k p_{X,Y}(s,t)\log\left(\frac{p_{X,Y}(s,t)}{p_X(s)p_Y(t)}\right),\]
+%donde $p_{X,Y}$ es la función de masa conjunta. Esto también puede escribirse como
+\[I(X;Y) := H_Y-H_{Y|X},\]
+donde $H_{Y|X}$ es la entropía de $Y$ después de observar $X$.
+
+\subsubsection{Algoritmos ID3 y J48}
+
+El algoritmo ID3 de Ross Quinlan genera árboles de decisión buscando minimizar la
+cantidad de preguntas sobre los atributos de un vector de entrada que deben hacerse
+para decidir su clasificación, seleccionando los atributos más importantes, esto es,
+que dan más información sobre el problema. Para determinar qué características son
+las más importantes busca maximizar información obtenida al observar una
+característica.
+
+Cuando un árbol pregunta sobre un atributo $E$, el conjunto de ejemplares $X$ con
+etiquetas $Y$ es dividido en subconjuntos $X_1,\ldots,X_k$ (con sus correspondientes
+eqiquetas $Y_1,\ldots,Y_k$) donde el atributo $E$ de todos los ejemplares en $X_i$
+es $i$, para cada valor de $E$. Maximizar
+\textit{la ganancia de información} es encontrar el atributo $E$ tal que la diferencia
+en la entropía de $X$ antes y después de dividir el conjunto de ejemplares es
+máxima, esto es
+\[\operatorname{arg max}_E IG(E),\]
+donde
+\[IG(E) := H_X - H_{X|E} = H_X - \sum_{i=1}^k \frac{|X_i|}{|X|}H_{X_i}\]
+es la ganancia de información al preguntar por el atributo $E$, aquí entiéndase
+$H_X$ en términos de $I(y_i)$ la información que da un ejemplar de $X$ que tiene
+etiqueta $y_i \in Y$ (pertenece a la categoría $i$). Como
+información mútua, $IG(E)$ nos dice cuánto se reduce la incertidumbre en $X$ después
+de observar a $E$.
+
+El algoritmo ID3 construye el árbol de decisión como sigue:
+\begin{enumerate}
+  \item Si todos los ejemplares de $X$ pertenecen a la misma categoría $i$ crea un nodo con etiqueta $i$.
+  \item Si ya no quedan atributos para preguntar crea un nodo con la etiqueta de la categoría más común en $X$.
+  \item Encuentra el atributo $E$ que maximiza $IG(E)$ y crea un nuevo árbol de decisión con raíz $E$. Para cada valor $e$ que pueda tomar $E$ y generar los subconjuntos $X_e$ y para cada $e$:
+  \begin{enumerate}
+    \item Si $X_e = \varnothing$ añadir una rama $E=e$ al árbol con raíz $E$ y un nodo con etiqueta la categoría más común en $X$.
+    \item Añadir una rama $E=e$ al árbol con raíz $E$ y subárbol el árbol resultante de ID3 sobre el conjunto $X_e$ (sin tomar en cuenta el atributo $E$).
+  \end{enumerate}
+  \item Regresar el árbol con raíz $E$.
+\end{enumerate}
+
+El algoritmo J48 es una mejora sobre el algoritmo ID3 y la versión libre del
+algoritmo C4.5 de Ross Quinlan. Permite trabajar con atributos continuos determinando
+un umbral para la separación del conjunto de ejemplares en subconjuntos (ejemplo,
+atributo numérico r, genera subconjuntos $X_{r\leq t},X_{r > t}$). También puede
+trabajar con datos incompletos (los ignora). J48 genera un árbol de decisión de
+la misma manera que ID3 pero después de crearlo procede a podarlo eliminando ramas
+que no contribuyen al resultado de la clasificación de ejemplares.
+
+\subsubsection{Ventajas y desventajas}
+
+Los árboles de decisión son herramientas sencillas, solo realizan una serie de
+preguntas sobre los atributos de los ejemplares (¿qué valor tiene?) por lo que
+su funcionamiento es fácil de comprender y no son muy exigentes computacionalmente,
+escpecialmente cuando se toman en cuenta pocos atributos para una clasificación
+(lo suficientemente) exitosa.
+
+Por otro lado, los árboles de decisión sufren de sobreentrenamiento cuando no
+fue posible encontrar patrones en los datos al generarlo, obteniendo árboles
+grandes y complicados que no generalizan.
+
+
+\end{document}
