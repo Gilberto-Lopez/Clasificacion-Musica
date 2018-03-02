@@ -7,8 +7,9 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage[margin=1in]{geometry}
+\usepackage[title]{appendix}
 % \usepackage{graphicx}
-% \usepackage{hyperref}
+\usepackage{hyperref}
 % \usepackage{listings}
 % \usepackage{xcolor}
 
@@ -63,7 +64,7 @@ de hipótesis es el conjunto de árboles que calculan funciones
 $A_1\times\ldots\times A_n \rightarrow \{0,\ldots,k-1\}$, que son al menos
 \[ k^r, r = \prod_{r=1}^n|A_r|. \]
 
-\subsubsection{Entropía de una variable aleatoria y Información Mútua}
+\subsubsection{Entropía de una variable aleatoria e Información mútua}
 
 La \textit{entropía} de una variable aleatoria $X$ es una medida de la cantidad
 promedio de información que nos da $X$ cada vez que toma un valor.
@@ -166,7 +167,73 @@ grandes y complicados que no generalizan.
 
 \section{Descripción de la propuesta e implementación}
 
+\subsection{Datos}
+
+Los datos para trabajar son la letra de canciones y el género asignado a la canción,
+obtenidos de la base de datos del servicio de letras musicales y traducción
+Musixmatch.\footnote{\url{http://www.musixmatch.com/}.}
+
+Usando un plan de servicio gratuito para testing sólo tenemos acceso al 30\% de
+la letra de cada canción. Mediante un wrapper de Python,
+pymusixmatch\footnote{\url{https://github.com/hudsonbrendon/python-musixmatch}},
+realizamos llamadas a la API de Musixmatch para obtener las canciones más populares
+de ciertos países (Bélgica, Canadá, Alemania, Reino Unido, México, Noruega,
+Rusia, Suecia, Estados Unidos, Australia, Emiratos Árabes Unidos, Suiza, Uganda y
+Nueva Zelanda).
+
+Se filtraron canciones para quedarnos sólo con aquellas
+que tenían un género musical asignado y letra de la canción en inglés, obteniendo
+un total de 1504 canciones. Pero al ser las canciones más populares es natural
+pensar que los hits se repetirán en distintos países, así que se eliminaron
+registros duplicados dejando un total de 614 canciones. Más aún, había géneros
+musicales con pocas canciones, por lo que se eliminaron canciones cuyo género
+tuviera menos de 8 canciones en el conjunto. El conjunto final de datos consta
+de 583 canciones (la letra y el género de).
+
+Durante la solicitud de los datos, antes de escribir la letra y género de la
+canción a un archivo CSV, se eliminaron las dos últimas líneas de la letra, que
+es un mensaje de Musixmatch comunicando que el dato no es para uso comercial.
+
+La etiqueta de cada canción es \texttt{CN} donde \texttt{N} es el id del género
+asignado por Musixmatch. Durante la solicitud de los datos se generó un diccionario
+que contiene el id y el nombre del género en texto (que no se podía tomar como
+etiqueta porque a veces tienen nombre distinto, ejemplo ``Hip-Hop'' y ``Hip Hop/Rap'').
+El diccionario puede encontrarse en el Apéndice A.
+
 \section{Conclusiones}
+
+\newpage
+\begin{appendices}
+\section{Diccionario de géneros}
+\begin{center}
+\begin{tabular}{|c|c||c|c|}
+\hline
+id & Género & id & Género\\
+\hline
+14 & Pop & 1073 & Hip-Hop\\
+17 & Dance & 1121 & Alternative \& Rock in Spanish\\
+1117 & Pop in Spanish & 1123 & Regional Mexicano\\
+18 & Hip Hop/Rap & 1133 & Pop/Rock\\
+20 & Alternative & 1124 & Salsa y Tropical\\
+50000064 & French Pop & 16 & Soundtrack\\
+1119 & Latin Urban & 1120 & Baladas y Boleros\\
+15 & R\&B/Soul & 1185 & Indian Pop\\
+7 & Electronic & 8 & Holiday\\
+21 & Rock & 1228 & Sertanejo\\
+10 & Singer/Songwriter & 1160 & Singer/Songwriter\\
+100007 & Electronic & 19 & World\\
+1169 & Soundtrack & 1098 & Christian Rock\\
+6 & Country & 22 & Christian \& Gospel\\
+1153 & Heavy Metal & 1284 & Khaleeji\\
+12 & Latin & 1285 & North African\\
+1686 & K-Pop & 1197 & Arabic\\
+50000068 & German Folk & 1076 & Rap\\
+50000066 & German Pop & 1196 & South America\\
+24 & Reggae & &\\
+\hline
+\end{tabular}
+\end{center}
+\end{appendices}
 
 \begin{thebibliography}{9}
 \bibitem{russellnorvig}
