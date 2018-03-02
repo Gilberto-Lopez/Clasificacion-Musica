@@ -30,3 +30,7 @@ hs_err_pid*
 # LaTeX files
 **/*.log
 **/*.aux
+**/*.out
+
+# ARFF files
+**/*.arff
