@@ -22,6 +22,6 @@ done
 cp canciones_sin_repeticiones_generos_dispersos.csv canciones_sin_repeticiones_generos_dispersos_pop.csv
 while read -r xx;
 do
-  sed -i '/$xx/d' canciones_sin_repeticiones_generos_dispersos_pop.csv 
+  sed -i "/$xx/d" canciones_sin_repeticiones_generos_dispersos_pop.csv 
 done < pop.csv
 rm pop.csv
