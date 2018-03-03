@@ -39,23 +39,23 @@ Los árboles de decisión para clasificación son una herramienta de aprendizaje
 supervisado para clasificación de ejemplares en categorías en base a los
 atributos de los ejemplares, esto es, decide a qué categoría pertenece el
 ejemplar. El árbol es una función que recibe un vector de atributos (o características) que
-representan un ejemplar de un fenómeno o situación, realiza una serie de
-preguntas sobre los valores de las características y con esta información
-decide a qué categoría pertenece el ejemplar.
+representan una instancia de un fenómeno o situación, realiza una serie de
+preguntas sobre los valores de dichos atributos y con esta información
+decide a qué categoría pertenece.
 
 \subsubsection{Espacio de hipótesis}
 
-Pensemos primero en árboles de decisión binarios (o booleanos), esto es, deciden si un ejemplar
+Pensemos primero en árboles de decisión binarios (o booleanos), es decir, deciden si un ejemplar
 pertenece a una de dos categorías (Sí o No). Supongamos que las características
 de los ejemplares de entrada son binarias también.
 
 Un árbol de decisión es una
-función que dado un vector de $n$ características $a_1,\ldots,a_n$,
+función que dado un vector de $n$ características $\vec{x} = a_1,\ldots,a_n$,
 asigna un valor en $\{0,1\}$. Hay un total de $2^n$ posibles vectores de entrada,
 por lo que existen un total de $2^{2^n}$ funciones de este tipo, sin embargo puede
 haber árboles distintos que calculen la misma función, por ejemplo, cambiando el
-orden de las preguntas sobre los atributos del vector de entrada. Así, el
-espacio de hipótesis con árboles de decisión es el conjunto de árboles que calculan
+orden de las preguntas sobre los atributos de $\vec{x}$. Así, el
+espacio de hipótesis es el conjunto de árboles de decisión que calculan
 las funciones binarias sobre vectores de $n$ características, que tiene cardinalidad
 al menos $2^{2^n}$.
 
@@ -69,18 +69,17 @@ $A_1\times\ldots\times A_n \rightarrow \{0,\ldots,k-1\}$, que son al menos
 \subsubsection{Entropía de una variable aleatoria e Información mútua}
 
 La \textit{entropía} de una variable aleatoria $X$ es una medida de la cantidad
-promedio de información que nos da $X$ cada vez que toma un valor.
-Podemos preguntarnos por qué tanta información nos da el evento
-$X = x_s$ cuando ocurre, por ejemplo: un evento que ocurre con probabilidad 1 no nos da
+promedio de información que nos da $X$ cada vez que toma un valor, esto es, ocurre el evento
+$X = x_s$. Un evento que ocurre con probabilidad 1 no nos da
 información porque sabemos que va a ocurrir, pero si un evento con baja probabilidad
-ocurre nos da más información sobre el fenómeno que modela $X$ en ese momento y
+ocurre nos da más información sobre el fenómeno que modela $X$ en ese momento, entonces
 la cantidad de información está relacionada con el inverso de la probabilidad
 de ocurrencia.
 
 Considera una variable aleatoria discreta $X$ que toma valores en un conjunto
 finito $\{x_1,\ldots,x_k\}$ con función de masa $p(s) = p_s = P[X = x_s]$. Definimos la
-cantidad de información ganada al observar el evento $X = x_s$ con probabilidad
-$p_s$ como \[ I(x_s) := \log \left(\frac{1}{p_s}\right) = -\log(p_s).\footnote{La
+cantidad de información ganada al observar el evento $X = x_s$
+como \[ I(x_s) := \log \left(\frac{1}{p_s}\right) = -\log(p_s).\footnote{La
 base del logaritmo es arbitaria, cuando es 2 la unidad de medición son bits.} \]
 
 La anterior definición cumple lo siguiente:
@@ -112,18 +111,18 @@ donde $H_{Y|X}$ es la entropía de $Y$ después de observar $X$.
 
 El algoritmo ID3 de Ross Quinlan genera árboles de decisión buscando minimizar la
 cantidad de preguntas sobre los atributos de un vector de entrada que deben hacerse
-para decidir su clasificación, seleccionando los atributos más importantes, esto es,
-que dan más información sobre el problema. Para determinar qué características son
-las más importantes busca maximizar información obtenida al observar una
+para decidir su clasificación seleccionando los atributos más importantes,
+los que dan más información sobre el problema. Para determinar qué características son
+las más importantes, busca maximizar información obtenida al observar una
 característica.
 
 Cuando un árbol pregunta sobre un atributo $E$, el conjunto de ejemplares $X$ con
 etiquetas $Y$ es dividido en subconjuntos $X_1,\ldots,X_k$ (con sus correspondientes
 eqiquetas $Y_1,\ldots,Y_k$) donde el atributo $E$ de todos los ejemplares en $X_i$
-es $i$, para cada valor de $E$. Maximizar
-\textit{la ganancia de información} es encontrar el atributo $E$ tal que la diferencia
+es $i$, para cada valor $i$ de $E$. Maximizar la
+\textit{ganancia de información} es encontrar el atributo $E$ tal que la diferencia
 en la entropía de $X$ antes y después de dividir el conjunto de ejemplares es
-máxima, esto es
+máxima:
 \[\operatorname{arg max}_E IG(E),\]
 donde
 \[IG(E) := H_X - H_{X|E} = H_X - \sum_{i=1}^k \frac{|X_i|}{|X|}H_{X_i}\]
@@ -145,10 +144,10 @@ El algoritmo ID3 construye el árbol de decisión como sigue:
   \item Regresar el árbol con raíz $E$.
 \end{enumerate}
 
-El algoritmo J48 es una mejora sobre el algoritmo ID3 y la versión libre del
-algoritmo C4.5 de Ross Quinlan. Permite trabajar con atributos continuos determinando
-un umbral para la separación del conjunto de ejemplares en subconjuntos (ejemplo,
-atributo numérico r, genera subconjuntos $X_{r\leq t},X_{r > t}$). También puede
+El algoritmo J48 de Weka es una mejora sobre el algoritmo ID3\footnote{La versión libre del
+algoritmo C4.5 de Ross Quinlan.}. Permite trabajar con atributos continuos determinando
+un umbral para la separación del conjunto de ejemplares (ejemplo,
+atributo numérico $r$ y umbral $t$, genera subconjuntos $X_{r\leq t},X_{r > t}$). También puede
 trabajar con datos incompletos (los ignora). J48 genera un árbol de decisión de
 la misma manera que ID3 pero después de crearlo procede a podarlo eliminando ramas
 que no contribuyen al resultado de la clasificación de ejemplares.
@@ -158,11 +157,11 @@ que no contribuyen al resultado de la clasificación de ejemplares.
 Los árboles de decisión son herramientas sencillas, solo realizan una serie de
 preguntas sobre los atributos de los ejemplares (¿qué valor tiene?) por lo que
 su funcionamiento es fácil de comprender y no son muy exigentes computacionalmente,
-escpecialmente cuando se toman en cuenta pocos atributos para una clasificación
+escpecialmente cuando toman en cuenta pocos atributos para una clasificación
 (lo suficientemente) exitosa.
 
 Por otro lado, los árboles de decisión sufren de sobreentrenamiento cuando no
-fue posible encontrar patrones en los datos al generarlo, obteniendo árboles
+fue posible encontrar patrones en los datos de entrenamiento al generarlo, obteniendo árboles
 grandes y complicados que no generalizan.
 
 \subsection{Bayes ingenuo}
@@ -179,28 +178,21 @@ Usando un plan de servicio gratuito para testing sólo tenemos acceso al 30\% de
 la letra de cada canción. Mediante un wrapper de Python,
 pymusixmatch\footnote{\url{https://github.com/hudsonbrendon/python-musixmatch}},
 realizamos llamadas a la API de Musixmatch para obtener las canciones más populares
-de ciertos países (Bélgica, Canadá, Alemania, Reino Unido, México, Noruega,
-Rusia, Suecia, Estados Unidos, Australia, Emiratos Árabes Unidos, Suiza, Uganda y
-Nueva Zelanda).
+de ciertos países (BE, CA, DE, GB, MX, NO, RU, SE, US, AU, AE, CH, UG, NZ).
 
-Se filtraron canciones para quedarnos sólo con aquellas
-que tenían un género musical asignado y letra de la canción en inglés, obteniendo
-un total de 1504 canciones. Pero al ser las canciones más populares es natural
-pensar que los hits se repetirán en distintos países, así que se eliminaron
-registros duplicados dejando un total de 614 canciones. Más aún, había géneros
-musicales con pocas canciones, por lo que se eliminaron canciones cuyo género
-tuviera menos de 8 canciones en el conjunto. El conjunto final de datos consta
-de 583 canciones (la letra y el género de).
+Se filtraron canciones para quedarnos sólo con aquellas que tenían un género musical
+asignado y letra de la canción en inglés, eliminando elementos repetidos.
+Más aún, había géneros musicales con pocas canciones, por lo que se eliminaron
+canciones cuyo género tuviera menos de 10 canciones en el conjunto. El conjunto final
+de datos consta de 575 canciones (la letra y el género de) de una cantidad
+inicial de 1504.
 
-Durante la solicitud de los datos, antes de escribir la letra y género de la
-canción a un archivo CSV, se eliminaron las dos últimas líneas de la letra, que
+Durante la solicitud de los datos, se eliminaron las dos últimas líneas de la letra, que
 es un mensaje de Musixmatch comunicando que el dato no es para uso comercial.
-
 La etiqueta de cada canción es \texttt{CN} donde \texttt{N} es el id del género
 asignado por Musixmatch. Durante la solicitud de los datos se generó un diccionario
-que contiene el id y el nombre del género en texto (que no se podía tomar como
-etiqueta porque a veces tienen nombre distinto, ejemplo ``Hip-Hop'' y ``Hip Hop/Rap'').
-El diccionario puede encontrarse en el Apéndice A.
+que contiene el id y el nombre del género en texto de los datos finales,
+puede encontrarse en el Apéndice A.
 
 \section{Conclusiones}
 
@@ -208,30 +200,14 @@ El diccionario puede encontrarse en el Apéndice A.
 \begin{appendices}
 \section{Diccionario de géneros}
 \begin{center}
-\begin{tabular}{|c|c||c|c|}
+\begin{tabular}{|c|c|c||c|c|c|}
 \hline
-id & Género & id & Género\\
+id & Género & \# canciones & id & Género & \# canciones\\
 \hline
-14 & Pop & 1073 & Hip-Hop\\
-17 & Dance & 1121 & Alternative \& Rock in Spanish\\
-1117 & Pop in Spanish & 1123 & Regional Mexicano\\
-18 & Hip Hop/Rap & 1133 & Pop/Rock\\
-20 & Alternative & 1124 & Salsa y Tropical\\
-50000064 & French Pop & 16 & Soundtrack\\
-1119 & Latin Urban & 1120 & Baladas y Boleros\\
-15 & R\&B/Soul & 1185 & Indian Pop\\
-7 & Electronic & 8 & Holiday\\
-21 & Rock & 1228 & Sertanejo\\
-10 & Singer/Songwriter & 1160 & Singer/Songwriter\\
-100007 & Electronic & 19 & World\\
-1169 & Soundtrack & 1098 & Christian Rock\\
-6 & Country & 22 & Christian \& Gospel\\
-1153 & Heavy Metal & 1284 & Khaleeji\\
-12 & Latin & 1285 & North African\\
-1686 & K-Pop & 1197 & Arabic\\
-50000068 & German Folk & 1076 & Rap\\
-50000066 & German Pop & 1196 & South America\\
-24 & Reggae & &\\
+14 & Pop & 266 & 15 & R\&B/Soul & 20 \\
+17 & Dance & 76 & 21 & Rock & 36 \\
+18 & Hip Hop/Rap & 46 & 6 & Country & 48 \\
+20 & Alternative & 83 & & & \\
 \hline
 \end{tabular}
 \end{center}

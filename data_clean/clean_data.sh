@@ -11,7 +11,7 @@ sed -i '/C12/d' canciones_sin_repeticiones_generos_dispersos.csv
 sed -i '/C1073/d' canciones_sin_repeticiones_generos_dispersos.csv
 sed -i '/C16/d' canciones_sin_repeticiones_generos_dispersos.csv
 sed -i '/C19/d' canciones_sin_repeticiones_generos_dispersos.csv
-#sed -i '/C7/d' canciones_sin_repeticiones_generos_dispersos.csv
+sed -i '/C7/d' canciones_sin_repeticiones_generos_dispersos.csv
 grep "C14" < canciones_sin_repeticiones_generos_dispersos.csv > pop.csv
 COUNTER=266
 for i in `seq 1 100`;
