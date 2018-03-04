@@ -78,12 +78,67 @@ Bayes, algoritmos genéticos, maquinas vectoriales, etc. Aquí hacemos referenci
 
 \subsection{Bayes Ingenuo}
 
-Bayes Ingenuo o Naive Bayes, en ingles, es una tecnica de aprendizaje supervisado para construir un
-clasificador. Este metodo ve las características del los objetos a clasificar y considera que la
-probabilidad de estas caracteristicas es independiente de las demas caracteristicas, es decir, el
+Bayes Ingenuo, o Naive Bayes en inglés, es una técnica de aprendizaje supervisado para construir un
+clasificador probabilístico. Este método ve las características del los objetos a clasificar y considera que la
+probabilidad de estas caracteristicas es independiente de las demás características, es decir, el
 hecho de que cierta palabra aparezca en un texto le da cierta probabilidad de pertenecer a cierto
-género o generos independientemente si las demas características para ser de ese género estan o no
+género o géneros independientemente si las demás características para ser de ese género estan o no
 presentes.
+
+\subsubsection{Teorema de Bayes e independencia condicional}
+
+El Teorema de Bayes dice que si $A,B$ son eventos, $\mathbb{P}[B] \neq 0$,
+entonces \[ \mathbb{P}[A|B] = \frac{\mathbb{P}[B|A]\mathbb{P}[A]}{\mathbb{P}[B]}. \]
+
+Dos eventos $A,B$ son independientes si $\mathbb{P}[A,B] = \mathbb{P}[A]\mathbb{P}[B]$.
+De igual manera, $A$ y $B$ son condicionalmente independientes dado un evento $C$
+si $\mathbb{P}[A,B|C] = \mathbb{P}[A|C]\mathbb{P}[B|C]$, esto se sigue de que la
+probabilidad condicional es una probabilidad.
+
+\subsubsection{Algoritmo}
+
+Dado un vector $\vec{x} = (a_1,\ldots,a_n)$ de $n$ características, se le asigna
+una probabilidad de pertenecer a una clase $C_i$ de entre $k$ clases
+$\mathbb{P}[C_i|a_1,\ldots,a_n] = \mathbb{P}[C_i|\vec{x}]$\footnote{Abuso de notación.},
+esto es igual a $\mathbb{P}[C_i,\vec{x}]/\mathbb{P}[\vec{x}]$.
+El modelo asumen que los atributos de $\vec{x}$ son condicionalmente independientes
+cuando se observa la categoría $C_i$ (de aquí el nombre ingenuo), entonces,
+por Teorema de Bayes tenemos que
+\begin{equation}
+\mathbb{P}[C_i|\vec{x}] = \frac{\mathbb{P}[\vec{x}|C_i]\mathbb{P}[C_i]}{\mathbb{P}[\vec{x}]}
+= \frac{\prod_j \mathbb{P}[a_j|C_i]\mathbb{P}[C_i]}{\mathbb{P}[\vec{x}]}.
+%= \frac{\mathbb{P}[C_i]\prod_j \mathbb{P}[a_j|C_i]}{\sum_r \mathbb{P}[\vec{x}|C_r]\mathbb{P}[C_r]}
+\end{equation}
+
+Con estas probabilidades, dado un vector de entrada $\vec{x}$, el clasificador
+decide la categoría $C_i$ a la que pertenece con la siguiente regla
+\[ C_i = \argmax_{C_k} \mathbb{P}[C_k|\vec{x}] = \argmax_{C_k} \mathbb{P}[C_k]\prod_j \mathbb{P}[a_j|C_k], \]
+nótese que no es necesario considerar $\mathbb{P}[\vec{x}]$ pues sólo depende
+de $\vec{x}$, por lo que se puede considerar una constante de reescalamiento.
+
+\subsubsection{Espacio de Hipótesis}
+
+El espacio de hipótesis consiste de las funciones de probabilidad que satisfacen
+la ecuación (1), el cual es infinito no numerable por ser la probabilidad una
+medida sobre $[0,1]$.
+
+\subsubsection{Ventajas y desventajas}
+
+Las ventajas del algoritmo son que es bastante sencillo, sólo son cuentas sobre
+probabilidades que se tienen de antemano. Si la hipótesis de independencia
+condicional realmente es válida, el algoritmo clasificará correctamente los
+ejemplares rápidamente sin necesidad de tanto entrenamiento, y aún cuando
+no se cumpla dicha hipótesis en la práctica ha demostrado tener muy buen
+desempeño.
+
+Una desventaja es que la hipótesis de independencia es muy fuerte y el clasificador
+obviará relaciones entre las características de los ejemplares de entrada. También
+requiere saber mucha información, las probabilidades \textit{a priori} de los datos
+(pertenecer a una clase $C_k$, observar un ejemplar $\vec{x}$ de manera
+independiente y dada una clase $C_k$), que si se calculan con una aproximación
+frecuentista en datos no representativos hará que las probabilidades tiendan a 0
+o 1 resultando en un pobre desempeño. Por esto mismo también le es difícil trabjar
+a la computadora con atributos continuos.
 
 \subsection{Árboles de decisión para clasificación}
 
@@ -97,26 +152,18 @@ decide a qué categoría pertenece.
 
 \subsubsection{Espacio de hipótesis}
 
-Pensemos primero en árboles de decisión binarios (o booleanos), es decir, deciden si un ejemplar
-pertenece a una de dos categorías (Sí o No). Supongamos que las características
-de los ejemplares de entrada son binarias también.
-
 Un árbol de decisión es una
 función que dado un vector de $n$ características $\vec{x} = (a_1,\ldots,a_n)$,
-asigna un valor en $\{0,1\}$. Hay un total de $2^n$ posibles vectores de entrada,
-por lo que existen un total de $2^{2^n}$ funciones de este tipo, sin embargo puede
-haber árboles distintos que calculen la misma función, por ejemplo, cambiando el
-orden de las preguntas sobre los atributos de $\vec{x}$. Así, el
-espacio de hipótesis es el conjunto de árboles de decisión que calculan
-las funciones binarias sobre vectores de $n$ características, que tiene cardinalidad
-al menos $2^{2^n}$.
-
-En el caso general donde los vectores de entrada tienen $n$ características, cada
-característica $a_i$ toma valores en algún conjunto finito $A_i$, y el árbol
-decide si el ejemplar pertenece a alguna de $k$ categorías distintas, nuestro espacio
-de hipótesis es el conjunto de árboles que calculan funciones
-$A_1\times\ldots\times A_n \rightarrow \{0,\ldots,k-1\}$, que son al menos
-\[ k^r, r = \prod_{r=1}^n|A_r|. \]
+donde cada característica toma valores en un conjunto finito $A_i$, decide si
+pertenece a una de $k$ categorías distintas, esto es, asigna a $\vec{x}$ un
+valor en $\{0,\ldots,k-1\}$. Así, los árboles de decisión son funciones de tipo
+$A_1\times\ldots\times A_n \rightarrow \{0,\ldots,k-1\}$, la cardinalidad de este
+conjunto es \[ k^r, r = \prod_{r=1}^n|A_r|, \] sin embargo, puede haber distintos
+árboles que calculen la misma función, por ejemplo, cambiando el orden de las
+preguntas sobre los atributos de $\vec{x}$. Así, el
+espacio de hipótesis es el conjunto de árboles de decisión que calculan dichas
+funciones sobre vectores de $n$ características, que tiene cardinalidad
+al menos $k^r$.
 
 \subsubsection{Entropía de una variable aleatoria e Información mútua}
 
@@ -214,9 +261,9 @@ escpecialmente cuando toman en cuenta pocos atributos para una clasificación
 
 Por otro lado, los árboles de decisión sufren de sobreentrenamiento cuando no
 fue posible encontrar patrones en los datos de entrenamiento al generarlo, obteniendo árboles
-grandes y complicados que no generalizan.
-
-\subsection{Bayes ingenuo}
+grandes y complicados que no generalizan. También, una vez construido el modelo
+es difícil modificarlo, por lo que habrá que construir un nuevo árbol para nuevos
+datos (esto es, no permite \textit{online learning}).
 
 \section{Descripción de la propuesta e implementación}
 
