@@ -231,6 +231,20 @@ se eliminaron manualmente tokens que consistían de números posiblemente seguid
 (100k, 7am, etc.) y tokens de dos caracteres que normalmente sobran por quitar
 comillas simples (``re'' de ``you're'' por ejemplo).
 
+\subsubsection{Clasificación}
+
+Intentaremos clasificar los textos por género utilizando dos modelos: Bayes ingenuo
+y árboles de decisión J48.
+
+Como primera aproximación tratamos de clasificar las canciones mediante las
+palabras que aparecen en su letra, una idea que surge de que la
+naturaleza del género reside en el ambiente que genera la canción, por ejemplo,
+esperamos que el Pop cree un ambiente más amable y alegre comparado con Heavy
+Metal sombrío, pensamos que encontraremos palabras como love y happiness en Pop,
+hate y death en Heavy Metal, rave y party en EDM, etcétera. Podríamos esperar
+entonces que un árbol de decisión sea capaz de encontrar tales patrones en los
+textos y decida correctamente el género.
+
 \section{Conclusiones}
 
 \begin{appendices}
