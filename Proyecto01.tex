@@ -14,6 +14,7 @@
 % \usepackage{xcolor}
 
 \renewcommand{\vec}[1]{\mathbf{#1}}
+\DeclareMathOperator*{\argmax}{arg\,max}
 \decimalpoint
 
 \title{Sistema de clasificación automática de documentos\\
@@ -77,7 +78,7 @@ la cantidad de información está relacionada con el inverso de la probabilidad
 de ocurrencia.
 
 Considera una variable aleatoria discreta $X$ que toma valores en un conjunto
-finito $\{x_1,\ldots,x_k\}$ con función de masa $p(s) = p_s = P[X = x_s]$. Definimos la
+finito $\{x_1,\ldots,x_k\}$ con probabilidad $p_s = \mathbb{P}[X = x_s]$. Definimos la
 cantidad de información ganada al observar el evento $X = x_s$
 como \[ I(x_s) := \log \left(\frac{1}{p_s}\right) = -\log(p_s).\footnote{La
 base del logaritmo es arbitaria, cuando es 2 la unidad de medición son bits.} \]
@@ -86,7 +87,7 @@ La anterior definición cumple lo siguiente:
 \begin{enumerate}
   \item Si $p_s=1$, $I(x_s) = 0$. Un evento que siempre ocurre no da información,
   \item $I(x_s) \geq 0$. La ocurrencia del evento $X = x_s$ da algo o nada de información,
-  nunca se pierde información,
+  no hay pérdida,
   \item Si $p_i < p_j$, $I(x_i) > I(x_j)$. Eventos menos probables dan más información.
 \end{enumerate}
 
@@ -104,7 +105,7 @@ una medida de la información que $X$ y $Y$ comparten, esto es, cuánto se reduc
 la incertidumbre de una cuando se observa la otra. Se define como
 %\[I(X;Y) := \sum_{t=1}^l\sum_{s=1}^k p_{X,Y}(s,t)\log\left(\frac{p_{X,Y}(s,t)}{p_X(s)p_Y(t)}\right),\]
 %donde $p_{X,Y}$ es la función de masa conjunta. Esto también puede escribirse como
-\[I(X;Y) := H_Y-H_{Y|X},\]
+\[I(X;Y) := H_Y-H_{Y|X} = H_X-H_{X|Y},\]
 donde $H_{Y|X}$ es la entropía de $Y$ después de observar $X$.
 
 \subsubsection{Algoritmos ID3 y J48}
@@ -123,10 +124,10 @@ es $i$, para cada valor $i$ de $E$. Maximizar la
 \textit{ganancia de información} es encontrar el atributo $E$ tal que la diferencia
 en la entropía de $X$ antes y después de dividir el conjunto de ejemplares es
 máxima:
-\[\operatorname{arg max}_E IG(E),\]
+\[\argmax_E IG(E),\]
 donde
 \[IG(E) := H_X - H_{X|E} = H_X - \sum_{i=1}^k \frac{|X_i|}{|X|}H_{X_i}\]
-es la ganancia de información al preguntar por el atributo $E$, aquí entiéndase
+es la ganancia de información al preguntar por el atributo $E$. Aquí entiéndase
 $H_X$ en términos de $I(y_i)$ la información que da un ejemplar de $X$ que tiene
 etiqueta $y_i \in Y$ (pertenece a la categoría $i$). Como
 información mútua, $IG(E)$ nos dice cuánto se reduce la incertidumbre en $X$ después
@@ -205,7 +206,8 @@ Para procesar las letras
 es necesario representar el texto (en minúsculas) como vectores de entradas numéricas usando
 el modelo de Weka, \texttt{StringToWordVector}. El modelo fue creado usando como
 delimitadores para el tokenizer
-``\texttt{\textvisiblespace\textbackslash r\textbackslash t.,;:\char`\"'‘’`()¿?!$\cdot*+-/\{\}$[]$<>$@\textbackslash n}'', generando palabras (unigramas).
+``\texttt{\textvisiblespace\textbackslash r\textbackslash t.,;:\char`\"}%
+\texttt{'‘’`()¿?!$\cdot*+-/\{\}$[]$<>$@\textbackslash n}'', generando palabras (unigramas).
 Los datos incluyen gran cantidad de contracciones, \textit{slangs} y sonidos escritos, por
 lo que obviamos signos de puntuación, tipos de paréntesis y símbolos poco comunes
 que llegan a aparecer. Aunque las comillas simples se usan en contracciones y
