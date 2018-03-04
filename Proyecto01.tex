@@ -59,7 +59,7 @@ humanos, y probablemente lo es más para canciones, ya que el género de estas d
 que generen y es posible que esto no solo dependa de la letra, sino, también de la música.
 
 Se debe mencionar que lo que estamos tratando de lograr es aprendizaje, es decir, dado el conjunto
-de letras de canciones, se buscaran patrones para que cuando se ingrese una letra nueva, el sistema
+de letras de canciones, se buscarán patrones para que cuando se ingrese una letra nueva, el sistema
 pueda clasificar de manera adecuada. Estos patrones los obtenemos por medio del aprendizaje
 supervisado, al generar nuestro árbol de decisión, clasificador probabilístico,
 o cualquier otro algoritmo de aprendizaje
@@ -74,7 +74,8 @@ clasificando letras que no ha visto como ya se dijo, e inclusive vuelva la clasi
 más eficiente. En otras palabras, nos interesa que aprenda a diferenciar canciones determinando
 aquellas propiedades importantes que le ayudarán a lograr tal tarea.
 
-En este artículo buscamos dar solución a este problema usando el aprendizaje supervisado. Existen
+En este artículo buscamos dar solución a este problema usando el aprendizaje supervisado, entrenando
+el algoritmo con letras de canciones ya clasificadas por género musical. Existen
 diversos algoritmos que cumplen esta propiedad de ser supervisados, como lo son Naive
 Bayes, máquinas de soporte vectorial, etc. Aquí hacemos referencia a dos de estos,
 árboles de decisión J48 y Naive Bayes.
@@ -273,6 +274,13 @@ datos (esto es, no permite \textit{online learning}).
 
 \section{Descripción de la propuesta e implementación}
 
+Para resolver este problema proponemos el uso de dos clasificadores para realizar
+una comparación en desempeño, árboles J48 y Bayes Ingenuo como ya se mencionó. Dos
+algoritmos que no requieren de mucha parametrización y son fáciles de construir
+usando la biblioteca de Machine Learning, Weka. Los modelos serán entrenados
+y evaluados utilizando la técnica de validación cruzada en 10 iteraciones para
+evitar que los resultados sean dependientes de la partición de los datos de entrada.
+
 \subsection{Datos}
 
 Los datos para trabajar son la letra de canciones y el género asignado a la canción,
@@ -298,8 +306,6 @@ La etiqueta de cada canción es \texttt{CN} donde \texttt{N} es el id del géner
 asignado por Musixmatch. Durante la solicitud de los datos se generó un diccionario
 que contiene el id y el nombre del género en texto de los datos finales,
 puede encontrarse en el Apéndice A.
-
-\subsection{Propuesta}
 
 \subsubsection{Preprocesamiento}
 
@@ -335,14 +341,12 @@ se eliminaron manualmente tokens que consistían de números posiblemente seguid
 (100k, 7am, etc.) y tokens de dos caracteres que normalmente sobran por quitar
 comillas simples (``re'' de ``you're'' por ejemplo).
 
-\subsubsection{Clasificación}
-
-Intentaremos clasificar los textos por género utilizando dos modelos: Bayes ingenuo
-y árboles de decisión J48.
+\subsection{Clasificación}
 
 Como primera aproximación tratamos de clasificar las canciones mediante las
-palabras que aparecen en su letra, una idea que surge de que la
-naturaleza del género reside en el ambiente que genera la canción, por ejemplo,
+palabras que aparecen en su letra, una idea que surge de pensar que la
+naturaleza del género reside en el ambiente que genera la canción entre la música
+y letra, por ejemplo,
 esperamos que el Pop cree un ambiente más amable y alegre comparado con Heavy
 Metal sombrío, pensamos que encontraremos palabras como `love' y `happiness' en Pop,
 `hate' y `death' en Heavy Metal, `rave' y `party' en EDM, etcétera. Podríamos esperar
