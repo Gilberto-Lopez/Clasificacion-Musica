@@ -251,10 +251,17 @@ Como primera aproximación tratamos de clasificar las canciones mediante las
 palabras que aparecen en su letra, una idea que surge de que la
 naturaleza del género reside en el ambiente que genera la canción, por ejemplo,
 esperamos que el Pop cree un ambiente más amable y alegre comparado con Heavy
-Metal sombrío, pensamos que encontraremos palabras como love y happiness en Pop,
-hate y death en Heavy Metal, rave y party en EDM, etcétera. Podríamos esperar
+Metal sombrío, pensamos que encontraremos palabras como `love' y `happiness' en Pop,
+`hate' y `death' en Heavy Metal, `rave' y `party' en EDM, etcétera. Podríamos esperar
 entonces que un árbol de decisión sea capaz de encontrar tales patrones en los
-textos y decida correctamente el género.
+textos y decida correctamente el género a partir de vectores booleanos (la
+palabra figura en la cacnión o no).
+
+Un problema con esto es que subgéneros toman elementos de otrs
+géneros por lo que pensar
+que un conjunto de palabras aparecen exclusivamente en un género es una intuición errónea,
+por lo que para refinar la idea anterior podemos contar las ocurrencias de las palabras
+y que estas cantidades sean las características de los vectores de entrada.
 
 \section{Conclusiones}
 
