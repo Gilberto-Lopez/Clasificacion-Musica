@@ -50,19 +50,40 @@ solucionar es el siguiente: Dado un conjunto de letras de canciones, ¿a que gé
 una?
 
 Existen varios factores que hacen que este problema sea difícil de resolver, como lo son las
-palabras usadas en cada tipo de género, la cantidad de contracciones y modismos usados, inclusive
-la cantidad de palabras. Un ejemplo parecido a lo que intentamos hacer, seria tomar poemas de
-distintas épocas de la humanidad y tratar de clasificarlos por movimientos culturales, es decir, si
-es del Renacimiento, del Barroco, etc., ya que cada movimiento tenia su propia métrica, temas, y
-forma de escribir. Este tipo de problemas llegan a ser complicados, incluso para los humanos, y
-probablemente lo es más para canciones, ya que el género de estas depende del ambiente que
-generen y es posible que esto no solo dependa de la letra, sino, también de la música.
+palabras usadas en cada género, la cantidad de contracciones y modismos usados en ciertos generos,
+inclusive la cantidad de palabras. Un ejemplo parecido a lo que intentamos hacer, seria tomar
+poemas de distintas épocas de la humanidad y tratar de clasificarlos por movimientos culturales, es
+decir, si es del Renacimiento, del Barroco, etc., ya que cada movimiento tenia su propia métrica,
+temas, y forma de escribir. Este tipo de problemas llegan a ser complicados, incluso para los
+humanos, y probablemente lo es más para canciones, ya que el género de estas depende del ambiente
+que generen y es posible que esto no solo dependa de la letra, sino, también de la música.
 
-Sin embargo, en este artículo buscamos dar solución a este problema usando aprendizaje supervisado.
-Existen diversos algoritmos que cumplen esta descripción de ser supervisados, como lo son Naive
+Se debe mencionar que lo que estamos tratando de lograr es aprendizaje, es decir, dado el conjunto
+de letras de canciones, se buscaran patrones para que cuando es ingrese una letra nueva, el sistema
+pueda clasificar de manera adecuada. Estos patrones los obtenemos por medio del aprendizaje
+supervisado, al generar nuestro árbol de decisión o cualquier otro algoritmo de aprendizaje
+supervisado. Se denomina supervisado porqué los algoritmos se ejecutan usando un conjunto de
+entrenamiento, que son datos que nosotros podemos definir para que nuestro algoritmo funcione de la
+manera desada.
+
+También requerimos de un agente intelligente ya que no solo nos interesa que clasifique la primera
+ronda de letras de canciones, es decir, el conjunto de entrenamiento, sino que pueda seguir
+mejorando la clasificación de las letras, e inclusive la vuelva mas eficiente. En otras palabras, nos interesa el continuo aprendizaje de nuestro clasificador.
+
+En este artículo buscamos dar solución a este problema usando el aprendizaje supervisado. Existen
+diversos algoritmos que cumplen esta propiedad de ser supervisados, como lo son Naive
 Bayes, algoritmos genéticos, maquinas vectoriales, etc. Aquí hacemos referencia a dos de estos,
 árboles de decisión J48 y Naive Bayes.
 \section{Descripción de la técnica elegida}
+
+\subsection{Bayes Ingenuo}
+
+Bayes Ingenuo o Naive Bayes, en ingles, es una tecnica de aprendizaje supervisado para construir un
+clasificador. Este metodo ve las características del los objetos a clasificar y considera que la
+probabilidad de estas caracteristicas es independiente de las demas caracteristicas, es decir, el
+hecho de que cierta palabra aparezca en un texto le da cierta probabilidad de pertenecer a cierto
+género o generos independientemente si las demas características para ser de ese género estan o no
+presentes.
 
 \subsection{Árboles de decisión para clasificación}
 
