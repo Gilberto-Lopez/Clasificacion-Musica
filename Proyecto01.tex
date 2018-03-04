@@ -50,7 +50,7 @@ pertenece a una de dos categorías (Sí o No). Supongamos que las característic
 de los ejemplares de entrada son binarias también.
 
 Un árbol de decisión es una
-función que dado un vector de $n$ características $\vec{x} = a_1,\ldots,a_n$,
+función que dado un vector de $n$ características $\vec{x} = (a_1,\ldots,a_n)$,
 asigna un valor en $\{0,1\}$. Hay un total de $2^n$ posibles vectores de entrada,
 por lo que existen un total de $2^{2^n}$ funciones de este tipo, sin embargo puede
 haber árboles distintos que calculen la misma función, por ejemplo, cambiando el
@@ -194,9 +194,43 @@ asignado por Musixmatch. Durante la solicitud de los datos se generó un diccion
 que contiene el id y el nombre del género en texto de los datos finales,
 puede encontrarse en el Apéndice A.
 
+\subsection{Propuesta}
+
+\subsubsection{Preprocesamiento}
+
+Durante la solicitud de los datos se decidió eliminar comillas dobles (\texttt{"}),
+pues su uso era escaso y delimitaban frases pequeñas.
+
+Para procesar las letras
+es necesario representar el texto (en minúsculas) como vectores de entradas numéricas usando
+el modelo de Weka, \texttt{StringToWordVector}. El modelo fue creado usando como
+delimitadores para el tokenizer
+``\texttt{\textvisiblespace\textbackslash r\textbackslash t.,;:\char`\"'‘’`()¿?!$\cdot*+-/\{\}$[]$<>$@\textbackslash n}'', generando palabras (unigramas).
+Los datos incluyen gran cantidad de contracciones, \textit{slangs} y sonidos escritos, por
+lo que obviamos signos de puntuación, tipos de paréntesis y símbolos poco comunes
+que llegan a aparecer. Aunque las comillas simples se usan en contracciones y
+modifican el significado de las palabras decidimos eliminarlas porque los datos
+no son consistentes, ``you're'' llegó a aparecer como ``you\textvisiblespace re''
+o con otro tipo de comillas simples que se identifican como caracteres distintos.
+También se solían usar las comillas simples en modismos ('bout
+en vez de about, runnin' para running) pero no en todas las canciones (gon,gon',gonna
+aparecían). Todo esto generaba ruido en los datos y aumentaba el número de
+características de la representación en vectores.
+
+También se utilizó un stemmer, el modelo \texttt{IteratedLovinsStemmer} que analiza
+prefijos para identificar raíces y palabras similares%
+\footnote{A diferencia de \texttt{SnowballStemmer} que simplifica
+la palabra eliminando sufijos hasta encontrar la raíz. Por modismos
+y contracciones el algoritmo es inapropiado en este caso, aún cuando el idioma
+de las letras es el inglés.}.
+
+Finalmente, la lista de \textit{stopwords} utilizada fue \texttt{Rainbow}, además
+se eliminaron manualmente tokens que consistían de números posiblemente seguidos de letras
+(100k, 7am, etc.) y tokens de dos caracteres que normalmente sobran por quitar
+comillas simples (``re'' de ``you're'' por ejemplo).
+
 \section{Conclusiones}
 
-\newpage
 \begin{appendices}
 \section{Diccionario de géneros}
 \begin{center}
