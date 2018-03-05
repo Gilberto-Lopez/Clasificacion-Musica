@@ -435,6 +435,36 @@ clasificaban dentro de otros géneros, como se ve en las Figuras 1 y 2.
 
 \subsection{Segundo intento de clasificación}
 
+Dado que las canciones de Pop eran las que más abundates y eran los ejemplares
+donde más se equivocaban los clasificadores intentamos eliminar 166 canciones de
+Pop para nivelar un poco la distribución de los datos y realizando el mismo
+procedimiento esperando una mejora en la clasificación, pero de hecho, empeoró
+la precisión de los algoritmos:
+
+\begin{center}
+\begin{tabular}{c | c | c}
+Clasificador &  \# de aciertos (Total 398) & \% de aciertos \\
+\hline
+Bayes Ingenuo (booleano) & 97 & 24.3719\% \\
+Bayes Ingenuo (ocurrencias) & 123 & 30.9045\% \\
+J48 (booleano) & 96 & 24.1206\% \\
+J48 (ocurrencias) & 89 & 22.3618\%
+\end{tabular}
+\end{center}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.35\textwidth]{bayes_spop_boolean}
+\includegraphics[width=0.35\textwidth]{bayes_spop_counter}
+\caption{Matrices de confusión. Bayes booleano (izq.) y Bayes ocurrencias (der.)}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.35\textwidth]{j48_spop_boolean}
+\includegraphics[width=0.35\textwidth]{j48_spop_counter}
+\caption{Matrices de confusión. J48 booleano (izq.) y J48 ocurrencias (der.)}
+\end{figure}
+
 \section{Conclusiones}
 
 \begin{appendices}
