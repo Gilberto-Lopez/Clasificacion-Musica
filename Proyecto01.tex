@@ -465,7 +465,41 @@ J48 (ocurrencias) & 89 & 22.3618\%
 \caption{Matrices de confusión. J48 booleano (izq.) y J48 ocurrencias (der.)}
 \end{figure}
 
+\subsection{Observaciones}
+
+Se jugó un poco con los parámetros del modelo \texttt{StringToWordVector} para tratar
+de refinar y simplificar los vectores de representación de texto. Intentamos no usar
+como delimitadores para el tokenizer las comillas simples y usar el stemmer
+\texttt{SnowballStemmer} (que en realidad no ayuda en nada) y notamos que no había
+mejora significativa en la precisión de la clasificación a la ya obtenida, ya fueran
+vectores booleanos o de ocurrencias, Bayes ingenuo o J48.
+
+También se intentó disminuir el parámetro \textit{confidence factor} de los árboles
+para tener una poda más agresiva, pero empeoraba el desempeño, mientras que
+aumentarlo generaba árboles más grandes que no estarían generalizando. En promedio,
+el tamaño de los árboles siempre fue de poco más de 200 nodos y al rededor de 110 hojas.
+
 \section{Conclusiones}
+
+El desempeño obtenido en los clasificadores no fue el mejor analizando simplemente
+la ocurrencia de las palabras, por lo que esta idea no es del todo correcta, se
+necesita más información para clasificar en géneros que sólo el vocabulario (que
+creímos habitual) presente en la letra de las canciones.
+
+Creemos que no seguimos un mal camino, y quizá se podría mejorar más la precisión
+de estos modelos con un preprocesamiento más exhaustivo de los datos, llevando a
+cabo una normalización más agresiva: cambiar contracciones por las frases
+completas o inclusive hasta eliminar algunas, cambiar slangs y modismos por
+palabras y/o frases del idioma inglés\footnote{Una herramienta para esto podría
+ser el algoritmo Sparrowhawk de Google. \url{http://github.com/google/sparrowhawk}},
+así como también herramientas más sofisticadas para representar texto en vectores%
+\footnote{Algoritmo word2vec de Google. \url{http://code.google.com/archive/p/word2vec/}}.
+
+Nuestra aproximación es sencilla, por lo que quizá sea necesario un análisis más
+profundo del texto para ver un salto significativo en la precisión. Una primera idea
+es no analizar palabras sino frases, esto es, dividir el texto usando
+$n$-gramas para tener una idea más amplia del contexto en que aparecen las palabras
+en la letra de las canciones.
 
 \begin{appendices}
 \section{Diccionario de géneros}
