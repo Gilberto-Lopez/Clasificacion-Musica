@@ -8,7 +8,7 @@
 \usepackage{amsthm}
 \usepackage[margin=1in]{geometry}
 \usepackage[title]{appendix}
-% \usepackage{graphicx}
+\usepackage{graphicx}
 \usepackage{hyperref}
 % \usepackage{listings}
 % \usepackage{xcolor}
@@ -359,6 +359,81 @@ géneros por lo que pensar
 que un conjunto de palabras aparecen exclusivamente en un género es una intuición errónea,
 por lo que para refinar la idea anterior podemos contar las ocurrencias de las palabras
 y que estas cantidades sean las características de los vectores de entrada.
+
+Entonces, la propuesta consiste en usar dos representaciones para el texto,
+vectores booleanos y vectores que cuentan ocurrencias de palabras, y usar dos
+modelos de clasificadores para intentar identificar el género de la canción.
+
+\section{Resultados}
+
+\subsection{Pruebas preliminares}
+
+Realizando experimentos para observar el comportamiento de los modelos
+de Weka refinamos un poco el modelo. Empezamos utilizando el stemmer
+\texttt{SnowballStemmer} ya que implementa el algoritmo de Porter para encontrar
+raíces en texto en inglés, pero esto resultó en vectores con muchas características,
+por lo que rápidamente fue descartada esta idea y escogimos
+\texttt{IteratedLovinsStemmer} por considerarlo más adecuado a este problema.
+
+\begin{center}
+\begin{tabular}{c | c}
+Stemmer &  \# de características (c/género)\\
+\hline
+Sin Stemmer (\texttt{NullStemmer}) & 3840\\
+\texttt{SnowballStemmer} & 3840\\
+\texttt{IteratedLovinsStemmer} & 2860
+\end{tabular}
+\end{center}
+
+En la tabla anterior puede apreciarse la diferencia entre los stemmers. Como se
+mencionó en la sección 4.1.1, el algoritmo de \texttt{IteratedLovinsStemmer}
+se desempeña mejor por las irregularidades lingüísticas de los datos.
+
+Añadiendo como lista de \textit{stopwords} \texttt{Rainbow}, hay una reducción de
+198 atributos, esto es, 2662 características incluyendo el género. Eliminando números
+y palabras de 2 caracteres con la expresión regular \texttt{[0-9]+[a-z]*|[a-z][a-z]}
+reducimos el número de características a 2503. Una vez reducido en 1337 el número de
+características de los vectores hacemos el trabajo de los clasificadores más
+fácil pues no tendrán que considerar elementos sin significado (principalmente
+para estructura gramatical del lenguaje) para clasificar y evitar sobreentrenamiento.
+
+\subsection{Primer intento de clasificación}
+
+Entrenando un árbol de decisión J48 y un clasificador Bayesiano ingenuo con los
+parámetros por defecto especificados por Weka obtenemos los siguientes resultados
+
+\begin{center}
+\begin{tabular}{c | c | c}
+Clasificador &  \# de aciertos (Total 575) & \% de aciertos \\
+\hline
+Bayes Ingenuo (booleano) & 187 & 32.5217\% \\
+Bayes Ingenuo (ocurrencias) & 219 & 38.087\% \\
+J48 (booleano) & 219 & 38.087\% \\
+J48 (ocurrencias) & 199 & 34.6087\%
+\end{tabular}
+\end{center}
+
+Un comportamiento observado en la matriz de confusión de los 4 clasificadores fue
+que las canciones de Pop, que son los datos más abundantes con 266 instancias comparado
+con 83 instancias del segundo género más popular Alternative (Rock alternativo),
+estaba afectando mucho a los clasificadores pues muchas canciones de otros géneros
+eran calsificadas como Pop y muchas canciones de Pop (al rededor de 100) se
+clasificaban dentro de otros géneros, como se ve en las Figuras 1 y 2.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.35\textwidth]{bayes_boolean}
+\includegraphics[width=0.35\textwidth]{bayes_counter}
+\caption{Matrices de confusión. Bayes booleano (izq.) y Bayes ocurrencias (der.)}
+\end{figure}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.35\textwidth]{j48_boolean}
+\includegraphics[width=0.35\textwidth]{j48_counter}
+\caption{Matrices de confusión. J48 booleano (izq.) y J48 ocurrencias (der.)}
+\end{figure}
+
+\subsection{Segundo intento de clasificación}
 
 \section{Conclusiones}
 

@@ -25,3 +25,5 @@ do
   sed -i "/$xx/d" canciones_sin_repeticiones_generos_dispersos_pop.csv 
 done < pop.csv
 rm pop.csv
+java -cp ".:./weka-stable-3.8.0.jar" weka.core.converters.CSVLoader data_clean/canciones_sin_repeticiones_generos_dispersos.csv -S 1 -N 2 -B 300 > dataset_original.arff
+java -cp ".:./weka-stable-3.8.0.jar" weka.core.converters.CSVLoader data_clean/canciones_sin_repeticiones_generos_dispersos_pop.csv -S 1 -N 2 -B 300 > dataset_sin_pop.arff
