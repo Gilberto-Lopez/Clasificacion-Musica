@@ -32,7 +32,7 @@ López García Gilberto Isaac}
 
 Los géneros musicales varian mucho de unos a otros, por los ritmos, los instrumentos musicales
 usados, la manera en que se canta y también en lo que se canta. Las letras de las canciones, pueden
-variar mucho de género a género, incluso se podréa llegar a pensar que en los géneros más
+variar mucho de género a género, incluso se podría llegar a pensar que en los géneros más
 relajados, sean estos Pop, Country, etc., se usen palabras agradables como ‘love’, mientras que del
 otro lado en géneros como el Heavy Metal, se usen palabras más agresivas, como ‘hate’ o ‘death’.
 He aquí la motivación para generar un clasificador de letras de canciones para determinar el género de
@@ -44,7 +44,7 @@ la clasificación de letras de canciones representa un problema complicado.
 \section{Descripción del problema}
 
 La clasificación de textos o documentos consiste en que dado un conjunto de textos disponibles,
-sean estos artículos científicos, artículos de revistas y en nuestro caso, canciones, se puedan
+sean estos artículos científicos, artículos de revistas o en nuestro caso, canciones, se puedan
 agrupar en cierta cantidad de grupos, temas o géneros. En nuestro caso, el problema que se busca
 solucionar es el siguiente: Dado un conjunto de letras de canciones, ¿a que género pertenece cada
 una?
@@ -88,7 +88,7 @@ Bayes Ingenuo, o Naive Bayes en inglés, es una técnica de aprendizaje supervis
 clasificador probabilístico. Este método ve las características del los objetos a clasificar y considera que la
 probabilidad de estas caracteristicas es independiente de las demás características, es decir, el
 hecho de que cierta palabra aparezca en un texto le da cierta probabilidad de pertenecer a cierto
-género o géneros independientemente si las demás características para ser de ese género estan o no
+género o géneros, independientemente si las demás características para ser de ese género estan o no
 presentes.
 
 \subsubsection{Teorema de Bayes e independencia condicional}
@@ -190,9 +190,9 @@ base del logaritmo es arbitaria, cuando es 2 la unidad de medición son bits.} \
 
 La anterior definición cumple lo siguiente:
 \begin{enumerate}
-  \item Si $p_s=1$, $I(x_s) = 0$. Un evento que siempre ocurre no da información,
+  \item Si $p_s=1$, $I(x_s) = 0$. Un evento que siempre ocurre no da información.
   \item $I(x_s) \geq 0$. La ocurrencia del evento $X = x_s$ da algo o nada de información,
-  no hay pérdida,
+  no hay pérdida.
   \item Si $p_i < p_j$, $I(x_i) > I(x_j)$. Eventos menos probables dan más información.
 \end{enumerate}
 
